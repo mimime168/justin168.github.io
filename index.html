@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📍 美食家-</title>
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px; /* 手機版型最佳化 */
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        p.subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 20px 0 12px;
+            text-align: left;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .btn {
+            background: white;
+            border: 1px solid #eee;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+            background-color: #f0f0f0;
+        }
+
+        .btn-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📍 美食雷達 V2.4</h1>
+    <p class="subtitle">Google Map 智慧快搜</p>
+
+    <!-- 快速分類 -->
+    <div class="grid">
+        <button class="btn" onclick="searchMap('附近美食')">
+            <span class="btn-icon">🍱</span>
+            找正餐
+        </button>
+        <button class="btn" onclick="searchMap('下午茶')">
+            <span class="btn-icon">🧋</span>
+            下午茶
+        </button>
+    </div>
+
+    <!-- 用餐情境 -->
+    <div class="section-title">1. 用餐情境</div>
+    <div class="grid">
+        <button class="btn" onclick="searchMap('平價美食')">
+            <span class="btn-icon">😋</span>
+            隨便吃吃
+        </button>
+        <button class="btn" onclick="searchMap('一個人吃飯')">
+            <span class="btn-icon">🙋</span>
+            1人獨享
+        </button>
+        <button class="btn" onclick="searchMap('約會餐廳')">
+            <span class="btn-icon">💕</span>
+            2人約會
+        </button>
+        <button class="btn" onclick="searchMap('聚餐餐廳')">
+            <span class="btn-icon">👨👩👧👦</span>
+            多人聚餐
+        </button>
+    </div>
+
+    <!-- 自訂搜尋 -->
+    <div class="section-title">2. 想吃什麼？</div>
+    <div class="input-group">
+        <input type="text" id="searchInput" placeholder="輸入關鍵字 (例如: 拉麵)...">
+        <button class="btn btn-primary" style="width: auto;" onclick="customSearch()">🔍</button>
+    </div>
+    <button class="btn btn-primary" onclick="randomChoice()">🎲 幫我選 (隨機抽籤)</button>
+
+    <div class="footer">
+        Designed by Perplexity & User<br>
+        Based on Original Concept V2.4
+    </div>
+</div>
+
+<script>
+    // 核心功能：開啟 Google Maps
+    function searchMap(query) {
+        // 使用通用 URL Scheme，在手機上會嘗試開啟 App，電腦上開啟新分頁
+        const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+        window.open(url, '_blank');
+    }
+
+    // 自訂搜尋功能
+    function customSearch() {
+        const input = document.getElementById('searchInput');
+        const value = input.value.trim();
+        if (value) {
+            searchMap(value);
+        } else {
+            alert("請輸入想吃的食物名稱！");
+        }
+    }
+
+    // 支援按下 Enter 鍵搜尋
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            customSearch();
+        }
+    });
+
+    // 隨機幫我選功能
+    function randomChoice() {
+        const foods = [
+            "拉麵", "壽司", "火鍋", "燒肉", "義大利麵", 
+            "泰式料理", "美式漢堡", "咖哩飯", "牛肉麵", 
+            "韓式炸雞", "滷肉飯", "早午餐", "牛排"
+        ];
+        
+        // 簡單的動畫效果 (模擬思考)
+        const btn = document.querySelector('button[onclick="randomChoice()"]');
+        const originalText = btn.innerHTML;
+        let count = 0;
+        
+        btn.disabled = true;
+        const interval = setInterval(() => {
+            btn.innerHTML = `🎲 ${foods[Math.floor(Math.random() * foods.length)]}`;
+            count++;
+            if (count > 10) {
+                clearInterval(interval);
+                const winner = foods[Math.floor(Math.random() * foods.length)];
+                btn.innerHTML = `🎉 去吃：${winner}！`;
+                
+                setTimeout(() => {
+                    if(confirm(`命運決定吃「${winner}」！\n要直接搜尋附近的店家嗎？`)) {
+                        searchMap(winner);
+                    }
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 500);
+            }
+        }, 100);
+    }
+</script>
+
+</body>
+</html>
